@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Assemblies Version="1073741836">
+  <Assembly Name="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Image="0b7204a8-b549-4674-ab50-b65c54e4bfd1" Timestamp="633529932480000000" XmlDocIndexTimestamp="633490255300000000" />
+  <Assembly Name="System.Data.DataSetExtensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Image="ec017c87-df76-4d01-9355-4cc90e652688" Timestamp="633529932480000000" XmlDocIndexTimestamp="633490255300000000" />
+  <Assembly Name="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Image="af65b5fc-61cd-4d3e-9906-6aa3e117e4ba" Timestamp="633529932480000000" XmlDocIndexTimestamp="633492859960000000" />
+  <Assembly Name="System.Xml.Linq, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Image="591ca42c-ab13-4a99-9a08-7df5fa9dcd07" Timestamp="633529932480000000" XmlDocIndexTimestamp="633490255300000000" />
+  <Assembly Name="JetBrains.Annotations, Version=4.1.933.3, Culture=neutral, PublicKeyToken=1010a0d8d6380325" Image="343a3cd9-d918-42b9-91bf-90d7ccaeb89a" Timestamp="633559958920000000" XmlDocIndexTimestamp="633559958920000000" />
+  <Assembly Name="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77" Image="a71dc65c-2526-415a-a7b6-dbc572e73d17" Timestamp="633425344160000000" XmlDocIndexTimestamp="633425344160000000" />
+  <Assembly Name="System.Runtime.Serialization, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Image="65509ecb-5ba4-4587-8219-e1930ec92707" Timestamp="633529773980000000" XmlDocIndexTimestamp="633490255300000000" />
+  <Assembly Name="System.ServiceModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Image="2d98760f-4ee3-4b4c-b6f1-fb37d22a55bb" Timestamp="633529773980000000" XmlDocIndexTimestamp="633489384100000000" />
+  <Assembly Name="System.ServiceModel.Web, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Image="36fc79fc-e148-41ea-89a8-e1214c2c3ef5" Timestamp="633529932480000000" XmlDocIndexTimestamp="633480756880000000" />
+  <Assembly Name="AdamRoderick.HeatMap" Image="5b817dbc-82d1-4429-b459-96f712b6a8c4" Timestamp="633650342658141152" />
+</Assemblies>

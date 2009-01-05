@@ -1,0 +1,33 @@
+﻿/* HeatMap Styles */
+
+#heatMapDebugDiv
+{
+	/*width: 800px;*/
+	border: 1px solid black;
+	padding: 5px;
+	background-color: #FFFFFF;
+	width: auto; 
+}
+#heatMapDebugDiv h3 
+{
+	background-color: #AAAAFF; 
+	font-size: 16px; 
+	text-align: center; 
+	padding: 3px;
+	cursor: hand;
+}
+
+.heatMapDebug-message 
+{
+	
+}
+
+.heatMapDebug-timestamp 
+{
+	font-size: smaller;
+}
+
+.heatMapDebug-link 
+{
+	font-size: smaller;
+}

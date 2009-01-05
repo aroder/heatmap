@@ -1,0 +1,335 @@
+<Configuration>
+  <SettingsComponent>
+    <string />
+    <integer>
+      <setting name="UsedSolutionBuilderID">0</setting>
+    </integer>
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="80F22DA6-8931-455C-AF5E-9A8D9721FA93/f:PaletteFactory.cs" caret="808" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMapUnitTests.aspx" caret="1133" scrollPosition="0|0" />
+      <File id="80F22DA6-8931-455C-AF5E-9A8D9721FA93/f:Util.cs" caret="399" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:QUnit.css" caret="467" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:QUnitTestRunner.js" caret="13943" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:ClientUnitTests.aspx" caret="783" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMapUnitTests.js" caret="9547" scrollPosition="0|185" />
+      <File id="80F22DA6-8931-455C-AF5E-9A8D9721FA93/f:HeatPoint.cs" caret="207" scrollPosition="0|0" />
+      <File id="4C202E34-4CEE-4E57-8D94-E9A0E8D7B0AD/f:QueryStringParserTests.cs" caret="1515" scrollPosition="0|0" />
+      <File id="4C202E34-4CEE-4E57-8D94-E9A0E8D7B0AD/f:HeatMapTests.cs" caret="334" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/f:HeatMapHandlerQueryStringParser.cs" caret="2580" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/f:Constants.cs" caret="1438" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:images/f:HeatMapGenerator.ashx.cs" caret="660" scrollPosition="0|0" />
+      <File id="80F22DA6-8931-455C-AF5E-9A8D9721FA93/f:HeatMap.cs" caret="8510" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:Default.aspx" caret="7830" scrollPosition="0|0" />
+      <File id="d:Miscellaneous Files/f:^TransientScriptDocument65.js" caret="5867" scrollPosition="0|122" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:One.Master" caret="868" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.css" caret="426" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="4613" scrollPosition="0|87" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:WebForm1.aspx" caret="1491" scrollPosition="0|0" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/f:HeatMapHandlerQueryStringParser.cs" caret="5535" scrollPosition="0|74" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/f:HeatMapHandlerQueryStringParser.cs" caret="808" scrollPosition="0|14" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/f:HeatMapHandlerQueryStringParser.cs" caret="1431" scrollPosition="0|20" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/f:HeatMapHandlerQueryStringParser.cs" caret="2298" scrollPosition="0|20" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:images/f:HeatMapGenerator.ashx.cs" caret="984" scrollPosition="0|13" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/f:Constants.cs" caret="489" scrollPosition="0|3" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/f:HeatMapHandlerQueryStringParser.cs" caret="1570" scrollPosition="36|32" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="10705" scrollPosition="0|219" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="11109" scrollPosition="0|219" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="13671" scrollPosition="0|284" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="13112" scrollPosition="0|284" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="12510" scrollPosition="0|284" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:WebForm1.aspx" caret="1092" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="10097" scrollPosition="0|207" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="566" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:WebForm1.aspx" caret="1094" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="143" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="777" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="6885" scrollPosition="0|138" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:One.Master" caret="868" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="11105" scrollPosition="0|219" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="6390" scrollPosition="0|116" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.css" caret="428" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.css" caret="319" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="5848" scrollPosition="0|116" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.css" caret="151" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.css" caret="426" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:WebForm1.aspx" caret="1658" scrollPosition="0|0" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:HeatMap.js" caret="4613" scrollPosition="0|87" />
+      <File id="C28D2FD6-1B7D-4CCE-BEDA-4E2E77EBD20B/d:__RESHARPER__DummyWebPages_/f:WebForm1.aspx" caret="825" scrollPosition="0|0" />
+    </RecentEdits>
+  </RecentFiles>
+  <UnitTestRunner>
+    <CustomStartDirectory>
+    </CustomStartDirectory>
+    <UseShadowCopy>True</UseShadowCopy>
+    <UseCustomFolder>False</UseCustomFolder>
+    <EnableUnitTesting>True</EnableUnitTesting>
+    <Providers />
+  </UnitTestRunner>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Default">
+      <Item value="using" priority="3" />
+      <Item value="System" priority="0" />
+      <Item value="private" priority="6" />
+      <Item value="IEnumerable" priority="6" />
+      <Item value="Point" priority="2" />
+      <Item value="public" priority="40" />
+      <Item value="HeatMap" priority="6" />
+      <Item value="Points" priority="0" />
+      <Item value="points" priority="0" />
+      <Item value="string" priority="25" />
+      <Item value="case" priority="0" />
+      <Item value="PALLETES" priority="2" />
+      <Item value="filename" priority="0" />
+      <Item value="break" priority="0" />
+      <Item value="default" priority="1" />
+      <Item value="int" priority="36" />
+      <Item value="Bitmap" priority="9" />
+      <Item value="Image" priority="1" />
+      <Item value="new" priority="49" />
+      <Item value="Size" priority="23" />
+      <Item value="width" priority="1" />
+      <Item value="height" priority="1" />
+      <Item value="byte" priority="2" />
+      <Item value="if" priority="13" />
+      <Item value="null" priority="7" />
+      <Item value="Palette" priority="0" />
+      <Item value="_palette" priority="1" />
+      <Item value="PaletteFactory" priority="1" />
+      <Item value="for" priority="1" />
+      <Item value="var" priority="5" />
+      <Item value="i" priority="3" />
+      <Item value="AdamRoderick" priority="4" />
+      <Item value="HeatPoint" priority="11" />
+      <Item value="List" priority="2" />
+      <Item value="List&lt;HeatPoint&gt;" priority="1" />
+      <Item value="list" priority="5" />
+      <Item value="p1" priority="0" />
+      <Item value="p2" priority="0" />
+      <Item value="image" priority="0" />
+      <Item value="hm" priority="0" />
+      <Item value="this" priority="8" />
+      <Item value="img" priority="5" />
+      <Item value="CreateIntensityMask" priority="0" />
+      <Item value="Colorize" priority="0" />
+      <Item value="return" priority="12" />
+      <Item value="outStream" priority="0" />
+      <Item value="ImageFormat" priority="0" />
+      <Item value="Test" priority="3" />
+      <Item value="void" priority="8" />
+      <Item value="AddBorder" priority="0" />
+      <Item value="context" priority="7" />
+      <Item value="Error" priority="2" />
+      <Item value="IHttpHandler" priority="0" />
+      <Item value="internal" priority="0" />
+      <Item value="retval" priority="20" />
+      <Item value="queryString" priority="9" />
+      <Item value="throw" priority="3" />
+      <Item value="ArgumentException" priority="3" />
+      <Item value="ExpectedException" priority="0" />
+      <Item value="Type" priority="1" />
+      <Item value="ExceptionType" priority="0" />
+      <Item value="typeof" priority="0" />
+      <Item value="AdamRoderick.HeatMap" priority="0" />
+      <Item value="HeatMapHandlerQueryStringParser" priority="12" />
+      <Item value="p" priority="1" />
+      <Item value="TestFixtureSetUp" priority="0" />
+      <Item value="_qs1" priority="2" />
+      <Item value="NameValueCollection" priority="9" />
+      <Item value="_queryStringMissingParameter" priority="2" />
+      <Item value="_parser" priority="4" />
+      <Item value="Assert" priority="4" />
+      <Item value="static" priority="13" />
+      <Item value="Constants" priority="25" />
+      <Item value="char" priority="6" />
+      <Item value="foreach" priority="0" />
+      <Item value="in" priority="0" />
+      <Item value="pointLocations" priority="0" />
+      <Item value="location" priority="5" />
+      <Item value="out" priority="1" />
+      <Item value="newPointCount" priority="1" />
+      <Item value="pointCount" priority="4" />
+      <Item value="class" priority="3" />
+      <Item value="const" priority="9" />
+      <Item value="parts" priority="4" />
+      <Item value="l" priority="0" />
+      <Item value="locationParts" priority="1" />
+      <Item value="x" priority="0" />
+      <Item value="GetHeatPointList" priority="0" />
+      <Item value="protected" priority="0" />
+      <Item value="HttpContext" priority="0" />
+      <Item value="Exception" priority="9" />
+      <Item value="IList" priority="0" />
+      <Item value="parser" priority="6" />
+      <Item value="_queryString" priority="5" />
+      <Item value="try" priority="2" />
+      <Item value="catch" priority="2" />
+      <Item value="w" priority="1" />
+      <Item value="h" priority="1" />
+      <Item value="ex" priority="5" />
+      <Item value="Util" priority="4" />
+      <Item value="mapSize" priority="3" />
+      <Item value="msg" priority="1" />
+      <Item value="DateTimeKind" priority="0" />
+      <Item value="DateTime" priority="1" />
+      <Item value="Log" priority="0" />
+      <Item value="ExceptionStringBuilder" priority="1" />
+      <Item value="_Default" priority="0" />
+      <Item value="CenStatsHeatMap.UI" priority="0" />
+      <Item value="expected" priority="1" />
+      <Item value="actual" priority="2" />
+      <Item value="QueryStringParserTests" priority="0" />
+      <Item value="emptyQueryString" priority="0" />
+      <Item value="NotImplementedException" priority="0" />
+      <Item value="pointRadius" priority="9" />
+      <Item value="windowTopLeftCorner" priority="2" />
+      <Item value="bool" priority="0" />
+      <Item value="pointRadus" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.String">
+      <Item value="Format" priority="1" />
+      <Item value="IsNullOrEmpty" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@AdamRoderick.HeatMap.PALLETES">
+      <Item value="SECOND" priority="0" />
+      <Item value="DEFAULT" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@AdamRoderick.HeatMap.PaletteFactory">
+      <Item value="Instance" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:AdamRoderick.HeatMap.PaletteFactory">
+      <Item value="GetPaletteBitmap" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.List`1">
+      <Item value="Add" priority="2" />
+      <Item value="Count" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:AdamRoderick.HeatMap.HeatMap">
+      <Item value="Image" priority="0" />
+      <Item value="Size" priority="2" />
+      <Item value="Points" priority="0" />
+      <Item value="GetBitmap" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Drawing.Size">
+      <Item value="Width" priority="4" />
+      <Item value="Height" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Drawing.Bitmap">
+      <Item value="Save" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Drawing.Imaging.ImageFormat">
+      <Item value="Png" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Web.HttpContext">
+      <Item value="Request" priority="5" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Web.HttpRequest">
+      <Item value="QueryString" priority="4" />
+      <Item value="Url" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:CenStatsHeatMap.UI.HeatMapHandlerQueryStringParser">
+      <Item value="GetHeatPointList" priority="6" />
+      <Item value="GetHeatMapSize" priority="0" />
+      <Item value="GetHeatMapWindowSize" priority="0" />
+      <Item value="GetHeatPointRadius" priority="5" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Specialized.NameValueCollection">
+      <Item value="Add" priority="1" />
+      <Item value="Count" priority="0" />
+      <Item value="ToString" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@NUnit.Framework.Assert">
+      <Item value="Greater" priority="0" />
+      <Item value="Equals" priority="0" />
+      <Item value="AreEqual" priority="2" />
+      <Item value="AreNotEqual" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IEnumerable`1">
+      <Item value="Count" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@CenStatsHeatMap.UI.Constants">
+      <Item value="QueryStringKeys" priority="0" />
+      <Item value="QueryString" priority="20" />
+      <Item value="HeatPoint" priority="0" />
+      <Item value="HeatMapSettingsDefaults" priority="6" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@CenStatsHeatMap.UI.Constants+QueryStringKeys">
+      <Item value="HeatPointData" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.String">
+      <Item value="Split" priority="5" />
+      <Item value="IndexOf" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Int32">
+      <Item value="TryParse" priority="1" />
+      <Item value="Parse" priority="6" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@CenStatsHeatMap.UI.Constants+QueryString">
+      <Item value="HeatPointData" priority="5" />
+      <Item value="HeatMapSettings" priority="14" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@CenStatsHeatMap.UI.Constants+QueryString+HeatPointData">
+      <Item value="PointCountSplitChar" priority="0" />
+      <Item value="Key" priority="2" />
+      <Item value="LocationSplitChar" priority="0" />
+      <Item value="XYSplitChar" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@CenStatsHeatMap.UI.Constants+HeatPoint">
+      <Item value="Intensity" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@CenStatsHeatMap.UI.Constants+QueryString+HeatMapSettings">
+      <Item value="SizeKey" priority="2" />
+      <Item value="DefaultSize" priority="1" />
+      <Item value="SizeSplitChar" priority="0" />
+      <Item value="DefaultWindowSize" priority="0" />
+      <Item value="WindowSizeKey" priority="1" />
+      <Item value="WindowSizeSplitChar" priority="1" />
+      <Item value="PointRadiusKey" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Diagnostics.Debug">
+      <Item value="Write" priority="0" />
+      <Item value="WriteLine" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Exception">
+      <Item value="Message" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@AdamRoderick.HeatMap.Util">
+      <Item value="Log" priority="4" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Uri">
+      <Item value="ToString" priority="0" />
+      <Item value="Query" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.DateTime">
+      <Item value="Now" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.DateTime">
+      <Item value="ToString" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@CenStatsHeatMap.UI.Constants+HeatMapSettingsDefaults">
+      <Item value="HeatPointIntensity" priority="0" />
+      <Item value="Size" priority="0" />
+      <Item value="WindowSize" priority="0" />
+      <Item value="PointRadius" priority="3" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IList`1">
+      <Item value="Count" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Int32">
+      <Item value="ToString" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Drawing.Point">
+      <Item value="X" priority="1" />
+      <Item value="Y" priority="1" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>

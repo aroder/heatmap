@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="CenStatsHeatMap.UI.HeatMapService" CodeBehind="HeatMapService.svc.cs" %>

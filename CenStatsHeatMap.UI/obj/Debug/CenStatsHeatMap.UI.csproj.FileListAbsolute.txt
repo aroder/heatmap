@@ -1,0 +1,9 @@
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\CenStatsHeatMap.UI\bin\HeatMapPalette.bmp
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\CenStatsHeatMap.UI\bin\HeatMapPalette2.bmp
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\CenStatsHeatMap.UI\bin\CenStatsHeatMap.UI.dll
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\CenStatsHeatMap.UI\bin\CenStatsHeatMap.UI.pdb
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\CenStatsHeatMap.UI\bin\AdamRoderick.HeatMap.dll
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\CenStatsHeatMap.UI\bin\AdamRoderick.HeatMap.pdb
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\CenStatsHeatMap.UI\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\CenStatsHeatMap.UI\obj\Debug\CenStatsHeatMap.UI.dll
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\CenStatsHeatMap.UI\obj\Debug\CenStatsHeatMap.UI.pdb

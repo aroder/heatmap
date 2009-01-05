@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
+  <TopNode>[0-1000]C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\HeatMapTests\HeatmapTests.nunit</TopNode>
+  <SelectedNode>[0-1007]C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\HeatMapTests\bin\Debug\HeatMapTests.dll</SelectedNode>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1000]C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\HeatMapTests\HeatmapTests.nunit" Expanded="true">
+      <Nodes>
+        <Node UniqueName="[0-1007]C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\HeatMapTests\bin\Debug\HeatMapTests.dll" Expanded="true">
+          <Nodes>
+            <Node UniqueName="[0-1008]HeatMapTests" Expanded="true">
+              <Nodes>
+                <Node UniqueName="[0-1001]HeatMapTests.HeatMapTests" Expanded="true">
+                  <Nodes>
+                    <Node UniqueName="[0-1002]HeatMapTests.HeatMapTests.PaletteFactoryFindsPalette" />
+                  </Nodes>
+                </Node>
+                <Node UniqueName="[0-1003]HeatMapTests.QueryStringParserTests" Expanded="true">
+                  <Nodes>
+                    <Node UniqueName="[0-1006]HeatMapTests.QueryStringParserTests.ReturnsCorrectNumberOfHeatPoints" />
+                    <Node UniqueName="[0-1005]HeatMapTests.QueryStringParserTests.ReturnsEmptyIfQueryStringValueMissing" />
+                    <Node UniqueName="[0-1004]HeatMapTests.QueryStringParserTests.ThrowsArgumentExceptionIfNullParameter" />
+                  </Nodes>
+                </Node>
+              </Nodes>
+            </Node>
+          </Nodes>
+        </Node>
+      </Nodes>
+    </Node>
+  </Nodes>
+</VisualState>
