@@ -135,6 +135,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="images\HeatMapGenerator.ashx" />
+    <Content Include="scripts\Asynchronizer.js" />
+    <Content Include="scripts\ccallwrapper.js" />
     <Content Include="styles\HeatMap.css" />
   </ItemGroup>
   <ItemGroup>

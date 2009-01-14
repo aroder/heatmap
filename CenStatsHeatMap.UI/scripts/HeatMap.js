@@ -5,6 +5,7 @@
 /// the application object, an anonymous class
 var HeatMap = {
     HeatMapPoints: [], // associative array where the key is "<lat>,<lng>", value is HeatMapPoint
+    AssociatedHeatMapPoints: [], // key is "<lat>,<lng>,<zoomLevel>", value is HeatMapPoint
     HeatMapTiles: [], // associative array where the key is "<tileX>,<tileY>,<zoom>", value is HeatMapTile
     Settings: {
         MinZoomLevel: 1,
@@ -26,11 +27,20 @@ var HeatMap = {
         }
         return this._map;
     },
-    Overlay: function(overlay) {
+    Overlay: function(overlay, zoomLevel) {
+        // if zoomLevel not defined, use the current zoom level
+        if (!zoomLevel) zoomLevel = this.GoogleMap().getZoom();
+
+        // if the private array is not defined, define it
+        if (!this._overlays) this._overlays = [];
+
+        // if the caller passed in a value, treat this as a setter
         if (overlay) {
-            this._overlay = overlay;
+            this._overlays[zoomLevel] = overlay;
         }
-        return this._overlay;
+
+        // return the overlay for the zoom level regardless of whether this call was a getter or setter
+        return this._overlays[zoomLevel];
     },
     /// A Google map projection, used to convert pixels to coordinates and back
     Projection: function() {
@@ -39,19 +49,21 @@ var HeatMap = {
     },
     /// adds the HeatMapPoint to the HeatMap, and associates the point and its tiles
     AddHeatMapPoint: function(heatMapPoint) {
+
         // add the heatMapPoint to the full list, or return if it already exists
-        var pointKey = String.format("{0},{1}", heatMapPoint.GLatLng().lat(), heatMapPoint.GLatLng().lng());
+        var pointKey = heatMapPoint.GLatLng().lat() + ',' + heatMapPoint.GLatLng().lng(); // String.format("{0},{1}", heatMapPoint.GLatLng().lat(), heatMapPoint.GLatLng().lng());
         if (this.HeatMapPoints[pointKey]) { return; }
         this.HeatMapPoints[pointKey] = heatMapPoint;
 
+        // SPEED OPTIMIZATION: INSTEAD OF GOING OVER EACH ZOOM LEVEL NOW, THE INDIVIDUAL ZOOM LEVELS ARE GONE OVER DURING HEATMAP.ADDTILEOVERLAY
         // for each zoom level, associate the point and its tiles
-        for (var zoomLevel = HeatMap.Settings.MinZoomLevel; zoomLevel < HeatMap.Settings.MaxZoomLevel; zoomLevel++) {
-            var tileArray = heatMapPoint.GetAssociatedTiles(zoomLevel);
-            // create the association from the tiles to the point
-            for (var i = 0; i < tileArray.length; i++) {
-                tileArray[i].AssociatedHeatMapPoints().push(heatMapPoint);
-            }
-        }
+        //        for (var zoomLevel = HeatMap.Settings.MinZoomLevel; zoomLevel < HeatMap.Settings.MaxZoomLevel; zoomLevel++) {
+        //            var tileArray = heatMapPoint.GetAssociatedTiles(zoomLevel);
+        //            // create the association from the tiles to the point
+        //            for (var i = 0; i < tileArray.length; i++) {
+        //                tileArray[i].AssociatedHeatMapPoints().push(heatMapPoint);
+        //            }
+        //        }
 
         // show a marker (pushpin) on the map if the settings direct it
         if (HeatMap.Settings.ShowMarkers) {
@@ -61,8 +73,10 @@ var HeatMap = {
     /// adds the array of HeatMapPoints to the HeatMap, and associates each point with its tiles
     AddHeatMapPointArray: function(heatMapPointArray) {
         for (var i = 0; i < heatMapPointArray.length; i++) {
+
             this.AddHeatMapPoint(heatMapPointArray[i]);
         }
+        HeatMap.Debug("Heatmap now contains " + hashSize(HeatMap.HeatMapPoints) + " HeatMapPoints.");
     },
     ClearHeatMapPoints: function() {
         this.HeatMapPoints = [];
@@ -87,6 +101,48 @@ var HeatMap = {
 
 
     AddTileOverlay: function() {
+        var start = new Date();
+        this.StartAddTileOverlay();
+    },
+    StartAddTileOverlay: function() {
+        // we are only concerned with the current zoom level
+        var zoomLevel = this.GoogleMap().getZoom();
+
+        var startTime = new Date();
+
+        /*
+        var asyncher = new Asynchronizer();
+        asyncher.for_in_(
+        this.HeatMapPoints,
+        function($, key) {
+        var tileArray = HeatMap.HeatMapPoints[key].GetAssociatedTiles(zoomLevel);
+        var j = 0;
+        for (var i = 0; i < tileArray.length; i++) {
+        tileArray[i].AssociatedHeatMapPoints().push(HeatMap.HeatMapPoints[key]);
+        j++;
+        }
+        return $.continue_();
+        },
+        function() {
+        HeatMap.FinishAddTileOverlay(startTime);
+        }, { clump: 'dynamic' }
+
+        );
+        */
+
+
+        for (var key in this.HeatMapPoints) {
+            // the point will tell us what tiles it pertains to (the tile that contains it plus any tiles it overlaps onto)
+            var tileArray = this.HeatMapPoints[key].GetAssociatedTiles(zoomLevel);
+            for (var i = 0; i < tileArray.length; i++) {
+                // create the association from the tile to the point
+                tileArray[i].AssociatedHeatMapPoints().push(this.HeatMapPoints[key]);
+            }
+        }
+        this.FinishAddTileOverlay(startTime);
+
+    },
+    FinishAddTileOverlay: function(startTime) {
         var TileLayer = new GTileLayer(null, null, null);
         TileLayer.getTileUrl = function(tile, zoom) {
             var key = String.format("{0},{1},{2}", tile.x, tile.y, zoom);
@@ -101,13 +157,30 @@ var HeatMap = {
         var o = new GTileLayerOverlay(TileLayer);
         this.GoogleMap().addOverlay(o);
         this.Overlay(o);
+
+        if (startTime) {
+            var end = new Date();
+            var dur = end.getTime() - startTime.getTime();
+            HeatMap.Debug("Added overlay.  Duration: " + dur);
+        }
+
     }
+    /// removes the overlay at the current zoom level
     , RemoveTileOverlay: function() {
-        this.GoogleMap().removeOverlay(this.Overlay());
+        if (this.Overlay()) this.GoogleMap().removeOverlay(this.Overlay());
     }
+    , ApplyHeatMap: function() {
+        if (!this.Overlay()) this.AddTileOverlay();
+    }
+    // removes and re adds the tile overlay at the current level
     , RefreshTileOverlay: function() {
         this.RemoveTileOverlay();
         this.AddTileOverlay();
+    }
+    /// clears overlays at all levels and then applies the heat map for the current level.  Other levels are applied when they are zoomed to
+    , ReapplyHeatMap: function() {
+        this._overlays = null;
+        this.ApplyHeatMap();
     }
     , Initialize: function(mapDivId) {
         this.LoadGoogle(mapDivId);
@@ -125,9 +198,11 @@ var HeatMap = {
             HeatMap.GoogleMap().addControl(new GMapTypeControl());
             HeatMap.GoogleMap().setCenter(HeatMap.Settings.Center, HeatMap.Settings.DefaultZoom);
 
-            HeatMap.AddTileOverlay(HeatMap.GoogleMap());
+            // REMOVED THIS LINE WHEN CREATED APPLYHEATMAPMETHOD
+            //HeatMap.AddTileOverlay(HeatMap.GoogleMap());
+
             GEvent.addListener(HeatMap.GoogleMap(), "zoomend", function(oldLevel, newLevel) {
-                HeatMap.RefreshTileOverlay();
+                HeatMap.ApplyHeatMap();
             });
         }
         else {
@@ -232,25 +307,38 @@ HeatMapTile.prototype.ContainsHeatMapPointInBounds = function(heatMapPoint) {
 };
 
 HeatMapTile.prototype.GetTileUrl = function() {
+    ////var startTime = new Date();
+
     if (!this._tileUrl) {
         if (0 < this.AssociatedHeatMapPoints().length) {
-            var data = "";
+            var data = new StringBuffer();
+
+            ////var startTime2 = new Date();
+
             for (var i = 0; i < this.AssociatedHeatMapPoints().length; i++) {
                 var tileRelativePoint = HeatMap.Projection().fromLatLngToPixel(this.AssociatedHeatMapPoints()[i].GLatLng(), this.Zoom());
                 var x = tileRelativePoint.x - (this.X() * 256);
                 var y = tileRelativePoint.y - (this.Y() * 256);
-                data += String.format("{0}x{1},", x, y);
+                data.Append(x);
+                data.Append('x');
+                data.Append(y);
+                data.Append(',');
             }
-            //remove last character
-            data = data.slice(0, data.length - 1);
+            if (0 < data._buffer.length) data._buffer.pop();
+            ////var endTime2 = new Date();
+            ////var duration2 = endTime2.getTime() - startTime2.getTime();
+            ////HeatMap.Debug("    Created data query string parameter.  Duration: " + duration2);
+            
             this._tileUrl = String.format(
                 "http://localhost:1723/images/HeatMapGenerator.ashx?data={0}"
-                , data
+                , data.ToString()
             );
             if (HeatMap.Settings.ShowTileBorder) {
                 this._tileUrl += String.format("&{0}={1}", HeatMap.Settings.Keys.ShowTileBorder, HeatMap.Settings.ShowTileBorder);
             }
-            HeatMap.Debug(String.format('Tile [{0},{1}] has URL {2}.', this.X(), this.Y(), this._tileUrl), this._tileUrl);
+            ////var endTime = new Date();
+            ////var duration = endTime.getTime() - startTime.getTime();
+            ////if (0 < duration) HeatMap.Debug("Completed GetTileUrl.  Duration: " + duration);
         } else {
             this._tileUrl = "";
         }
@@ -333,18 +421,18 @@ HeatMapPoint.prototype.CalculateTileAssociations = function(zoomLevel) {
 
 /// Calculates and adds associated tiles to this point's associated tiles list.
 /// If called a second time, does not reperform the calculations
-HeatMapPoint.prototype.ApplyTileAssociations = function() {
-    if (0 === this._associatedTiles.length) {
-        for (var zoomLevel = HeatMap.Settings.MinZoomLevel; zoomLevel < HeatMap.Settings.MaxZoomLevel; zoomLevel++) {
+HeatMapPoint.prototype.ApplyTileAssociations = function(zoomLevel) {
+    if (!this._associatedTiles[zoomLevel]) {
+        //for (var zoomLevel = HeatMap.Settings.MinZoomLevel; zoomLevel < HeatMap.Settings.MaxZoomLevel; zoomLevel++) {
             this._associatedTiles[zoomLevel] = this.CalculateTileAssociations(zoomLevel);
-        }
+        //}
     }
 };
 /// Array of HeatMapTile.
 HeatMapPoint.prototype.GetAssociatedTiles = function(zoomLevel) {
     if (!zoomLevel) { throw "zoomLevel was not set in GetAssociatedTiles"; }
     if (!this._associatedTiles[zoomLevel]) {
-        this.ApplyTileAssociations();
+        this.ApplyTileAssociations(zoomLevel);
     }
     return this._associatedTiles[zoomLevel];
 };
@@ -357,6 +445,7 @@ HeatMapPoint.prototype.GetAssociatedTiles = function(zoomLevel) {
 
 
 // util functions
+
 String.format = function(text) {
     //check if there are two arguments in the arguments list
     if (arguments.length <= 1) {
@@ -373,6 +462,28 @@ String.format = function(text) {
     }
     return text;
 };
+
+
+/// StringBuffer
+/// usage: 
+/// var buf = new StringBuffer();
+/// buf.append("Hello");
+/// buf.append("World");
+/// alert(buf.ToString());
+///
+/// OUTPUT:
+/// HelloWorld
+function StringBuffer() {
+    this._buffer = [];
+}
+StringBuffer.prototype.Append = function(string) {
+    this._buffer.push(string);
+    return this;
+}
+StringBuffer.prototype.ToString = function() {
+    return this._buffer.join('');
+}
+
 
 function hashSize(hash) {
     var length = 0; //hash.length ? --hash.length : -1;
@@ -452,355 +563,356 @@ See http://www.JSON.org/js.html
 modified by Rick Strahl to support MS AJAX style
 date formats
 */
-
+/*
 if (!this.JSON2) {
 
-    // Create a JSON object only if one does not already exist. We create the
-    // object in a closure to avoid global variables.
+// Create a JSON object only if one does not already exist. We create the
+// object in a closure to avoid global variables.
 
-    this.JSON2 = function() {
+this.JSON2 = function() {
 
-        function f(n) {    // Format integers to have at least two digits.
-            return n < 10 ? '0' + n : n;
-        }
+function f(n) {    // Format integers to have at least two digits.
+return n < 10 ? '0' + n : n;
+}
 
-        //*** RAS - removed date .toJSON for MS Ajax - string double encodes otherwise
+//*** RAS - removed date .toJSON for MS Ajax - string double encodes otherwise
 
-        //        Date.prototype.toJSON = function () {
+//        Date.prototype.toJSON = function () {
 
-        //// Eventually, this method will be based on the date.toISOString method.
-        //              
-        //              // RAS MODIFIED: Return MS AJAX Style dates
-        //              var xx = '"\/Date(' + this.getTime() + ')\/"';                                    
-        //              return xx;
-        ////            return this.getUTCFullYear()   + '-' +
-        ////                 f(this.getUTCMonth() + 1) + '-' +
-        ////                 f(this.getUTCDate())      + 'T' +
-        ////                 f(this.getUTCHours())     + ':' +
-        ////                 f(this.getUTCMinutes())   + ':' +
-        ////                 f(this.getUTCSeconds())   + 'Z';
-        //        };
+//// Eventually, this method will be based on the date.toISOString method.
+//              
+//              // RAS MODIFIED: Return MS AJAX Style dates
+//              var xx = '"\/Date(' + this.getTime() + ')\/"';                                    
+//              return xx;
+////            return this.getUTCFullYear()   + '-' +
+////                 f(this.getUTCMonth() + 1) + '-' +
+////                 f(this.getUTCDate())      + 'T' +
+////                 f(this.getUTCHours())     + ':' +
+////                 f(this.getUTCMinutes())   + ':' +
+////                 f(this.getUTCSeconds())   + 'Z';
+//        };
 
 
-        var escapeable = /["\\\x00-\x1f\x7f-\x9f]/g,
-            gap,
-            indent,
-            meta = {    // table of character substitutions
-                '\b': '\\b',
-                '\t': '\\t',
-                '\n': '\\n',
-                '\f': '\\f',
-                '\r': '\\r',
-                '"': '\\"',
-                '\\': '\\\\'
-            },
-            rep;
+var escapeable = /["\\\x00-\x1f\x7f-\x9f]/g,
+gap,
+indent,
+meta = {    // table of character substitutions
+'\b': '\\b',
+'\t': '\\t',
+'\n': '\\n',
+'\f': '\\f',
+'\r': '\\r',
+'"': '\\"',
+'\\': '\\\\'
+},
+rep;
 
 
-        function quote(string) {
+function quote(string) {
 
-            // If the string contains no control characters, no quote characters, and no
-            // backslash characters, then we can safely slap some quotes around it.
-            // Otherwise we must also replace the offending characters with safe escape
-            // sequences.
+// If the string contains no control characters, no quote characters, and no
+// backslash characters, then we can safely slap some quotes around it.
+// Otherwise we must also replace the offending characters with safe escape
+// sequences.
 
-            return escapeable.test(string) ?
-                '"' + string.replace(escapeable, function(a) {
-                    var c = meta[a];
-                    if (typeof c === 'string') {
-                        return c;
-                    }
-                    c = a.charCodeAt();
-                    return '\\u00' + Math.floor(c / 16).toString(16) +
-                                               (c % 16).toString(16);
-                }) + '"' :
-                '"' + string + '"';
-        }
+return escapeable.test(string) ?
+'"' + string.replace(escapeable, function(a) {
+var c = meta[a];
+if (typeof c === 'string') {
+return c;
+}
+c = a.charCodeAt();
+return '\\u00' + Math.floor(c / 16).toString(16) +
+(c % 16).toString(16);
+}) + '"' :
+'"' + string + '"';
+}
 
 
-        function str(key, holder) {
+function str(key, holder) {
 
-            // Produce a string from holder[key].
+// Produce a string from holder[key].
 
-            var i,          // The loop counter.
-                k,          // The member key.
-                v,          // The member value.
-                length,
-                mind = gap,
-                partial,
-                value = holder[key];
+var i,          // The loop counter.
+k,          // The member key.
+v,          // The member value.
+length,
+mind = gap,
+partial,
+value = holder[key];
 
-            // If the value has a toJSON method, call it to obtain a replacement value.
+// If the value has a toJSON method, call it to obtain a replacement value.
 
-            if (value && typeof value === 'object' &&
-                    typeof value.toJSON === 'function') {
-                value = value.toJSON(key);
-            }
-
-            // If we were called with a replacer function, then call the replacer to
-            // obtain a replacement value.
-
-            if (typeof rep === 'function') {
-                value = rep.call(holder, key, value);
-            }
+if (value && typeof value === 'object' &&
+typeof value.toJSON === 'function') {
+value = value.toJSON(key);
+}
+
+// If we were called with a replacer function, then call the replacer to
+// obtain a replacement value.
+
+if (typeof rep === 'function') {
+value = rep.call(holder, key, value);
+}
 
-            // What happens next depends on the value's type.
-
-            switch (typeof value) {
-
-                case 'string':
-                    return quote(value);
-
-                case 'number':
-
-                    // JSON numbers must be finite. Encode non-finite numbers as null.
-
-                    return isFinite(value) ? String(value) : 'null';
-
-                case 'boolean':
-                case 'null':
+// What happens next depends on the value's type.
+
+switch (typeof value) {
+
+case 'string':
+return quote(value);
+
+case 'number':
+
+// JSON numbers must be finite. Encode non-finite numbers as null.
+
+return isFinite(value) ? String(value) : 'null';
+
+case 'boolean':
+case 'null':
 
-                    // If the value is a boolean or null, convert it to a string. Note:
-                    // typeof null does not produce 'null'. The case is included here in
-                    // the remote chance that this gets fixed someday.
-
-                    return String(value);
-
-                    // If the type is 'object', we might be dealing with an object or an array or
-                    // null.
-
-                case 'object':
-
-                    // Due to a specification blunder in ECMAScript, typeof null is 'object',
-                    // so watch out for that case.
-
-                    if (!value) {
-                        return 'null';
-                    }
-
-                    // *** RAS - MS AJAX style date encoding
-                    if (value.toUTCString) {
-                        var xx = '"\\/Date(' + value.getTime() + ')\\/"';
-                        return xx;
-                    }
-
-                    // Make an array to hold the partial results of stringifying this object value.
-
-                    gap += indent;
-                    partial = [];
-
-                    // If the object has a dontEnum length property, we'll treat it as an array.
-
-                    if (typeof value.length === 'number' &&
-                        !(value.propertyIsEnumerable('length'))) {
-
-                        // The object is an array. Stringify every element. Use null as a placeholder
-                        // for non-JSON values.
-
-                        length = value.length;
-                        for (i = 0; i < length; i += 1) {
-                            partial[i] = str(i, value) || 'null';
-                        }
-
-                        // Join all of the elements together, separated with commas, and wrap them in
-                        // brackets.
-
-                        v = partial.length === 0 ? '[]' :
-                        gap ? '[\n' + gap + partial.join(',\n' + gap) +
-                                  '\n' + mind + ']' :
-                              '[' + partial.join(',') + ']';
-                        gap = mind;
-                        return v;
-                    }
-
-                    // If the replacer is an array, use it to select the members to be stringified.
+// If the value is a boolean or null, convert it to a string. Note:
+// typeof null does not produce 'null'. The case is included here in
+// the remote chance that this gets fixed someday.
+
+return String(value);
+
+// If the type is 'object', we might be dealing with an object or an array or
+// null.
+
+case 'object':
+
+// Due to a specification blunder in ECMAScript, typeof null is 'object',
+// so watch out for that case.
+
+if (!value) {
+return 'null';
+}
+
+// *** RAS - MS AJAX style date encoding
+if (value.toUTCString) {
+var xx = '"\\/Date(' + value.getTime() + ')\\/"';
+return xx;
+}
+
+// Make an array to hold the partial results of stringifying this object value.
+
+gap += indent;
+partial = [];
+
+// If the object has a dontEnum length property, we'll treat it as an array.
+
+if (typeof value.length === 'number' &&
+!(value.propertyIsEnumerable('length'))) {
+
+// The object is an array. Stringify every element. Use null as a placeholder
+// for non-JSON values.
+
+length = value.length;
+for (i = 0; i < length; i += 1) {
+partial[i] = str(i, value) || 'null';
+}
+
+// Join all of the elements together, separated with commas, and wrap them in
+// brackets.
+
+v = partial.length === 0 ? '[]' :
+gap ? '[\n' + gap + partial.join(',\n' + gap) +
+'\n' + mind + ']' :
+'[' + partial.join(',') + ']';
+gap = mind;
+return v;
+}
+
+// If the replacer is an array, use it to select the members to be stringified.
 
-                    if (typeof rep === 'object') {
-                        length = rep.length;
-                        for (i = 0; i < length; i += 1) {
-                            k = rep[i];
-                            if (typeof k === 'string') {
-                                v = str(k, value, rep);
-                                if (v) {
-                                    partial.push(quote(k) + (gap ? ': ' : ':') + v);
-                                }
-                            }
-                        }
-                    } else {
+if (typeof rep === 'object') {
+length = rep.length;
+for (i = 0; i < length; i += 1) {
+k = rep[i];
+if (typeof k === 'string') {
+v = str(k, value, rep);
+if (v) {
+partial.push(quote(k) + (gap ? ': ' : ':') + v);
+}
+}
+}
+} else {
 
-                        // Otherwise, iterate through all of the keys in the object.
-
-                        for (k in value) {
-                            if (k) {
-                                v = str(k, value, rep);
-                                if (v) {
-                                    partial.push(quote(k) + (gap ? ': ' : ':') + v);
-                                }
-                            }
-                        }
-                    }
-
-                    // Join all of the member texts together, separated with commas,
-                    // and wrap them in braces.
-
-                    v = partial.length === 0 ? '{}' :
-                    gap ? '{\n' + gap + partial.join(',\n' + gap) +
-                              '\n' + mind + '}' :
-                          '{' + partial.join(',') + '}';
-                    gap = mind;
-                    return v;
-            }
-        }
-
-
-        // Return the JSON object containing the stringify, parse, and quote methods.
-
-        return {
-            stringify: function(value, replacer, space) {
-
-                // The stringify method takes a value and an optional replacer, and an optional
-                // space parameter, and returns a JSON text. The replacer can be a function
-                // that can replace values, or an array of strings that will select the keys.
-                // A default replacer method can be provided. Use of the space parameter can
-                // produce text that is more easily readable.
-
-                var i;
-                gap = '';
-                indent = '';
-                if (space) {
-
-                    // If the space parameter is a number, make an indent string containing that
-                    // many spaces.
-
-                    if (typeof space === 'number') {
-                        for (i = 0; i < space; i += 1) {
-                            indent += ' ';
-                        }
-
-                        // If the space parameter is a string, it will be used as the indent string.
-
-                    } else if (typeof space === 'string') {
-                        indent = space;
-                    }
-                }
-
-                // If there is no replacer parameter, use the default replacer.
-
-                if (!replacer) {
-                    rep = function(key, value) {
-                        if (!Object.hasOwnProperty.call(this, key)) {
-                            return undefined;
-                        }
-                        return value;
-                    };
-
-                    // The replacer can be a function or an array. Otherwise, throw an error.
-
-                } else if (typeof replacer === 'function' ||
-                        (typeof replacer === 'object' &&
-                         typeof replacer.length === 'number')) {
-                    rep = replacer;
-                } else {
-                    throw new Error('JSON.stringify');
-                }
-
-                // Make a fake root object containing our value under the key of ''.
-                // Return the result of stringifying the value.
-
-                return str('', { '': value });
-            },
-
-
-            parse: function(text, reviver) {
-
-                // The parse method takes a text and an optional reviver function, and returns
-                // a JavaScript value if the text is a valid JSON text.
-                var j;
-
-                function walk(holder, key) {
-
-                    // The walk method is used to recursively walk the resulting structure so
-                    // that modifications can be made.
-
-                    var k, v, value = holder[key];
-                    if (value && typeof value === 'object') {
-                        for (k in value) {
-                            if (Object.hasOwnProperty.call(value, k)) {
-                                v = walk(value, k);
-                                if (v !== undefined) {
-                                    value[k] = v;
-                                } else {
-                                    delete value[k];
-                                }
-                            }
-                        }
-                    }
-                    return reviver.call(holder, key, value);
-                }
-
-
-                // Parsing happens in three stages. In the first stage, we run the text against
-                // regular expressions that look for non-JSON patterns. We are especially
-                // concerned with '()' and 'new' because they can cause invocation, and '='
-                // because it can cause mutation. But just to be safe, we want to reject all
-                // unexpected forms.
-
-                // We split the first stage into 4 regexp operations in order to work around
-                // crippling inefficiencies in IE's and Safari's regexp engines. First we
-                // replace all backslash pairs with '@' (a non-JSON character). Second, we
-                // replace all simple value tokens with ']' characters. Third, we delete all
-                // open brackets that follow a colon or comma or that begin the text. Finally,
-                // we look to see that the remaining characters are only whitespace or ']' or
-                // ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.
-
-                if (/^[\],:{}\s]*$/.test(text.replace(/\\["\\\/bfnrtu]/g, '@').
+// Otherwise, iterate through all of the keys in the object.
+
+for (k in value) {
+if (k) {
+v = str(k, value, rep);
+if (v) {
+partial.push(quote(k) + (gap ? ': ' : ':') + v);
+}
+}
+}
+}
+
+// Join all of the member texts together, separated with commas,
+// and wrap them in braces.
+
+v = partial.length === 0 ? '{}' :
+gap ? '{\n' + gap + partial.join(',\n' + gap) +
+'\n' + mind + '}' :
+'{' + partial.join(',') + '}';
+gap = mind;
+return v;
+}
+}
+
+
+// Return the JSON object containing the stringify, parse, and quote methods.
+
+return {
+stringify: function(value, replacer, space) {
+
+// The stringify method takes a value and an optional replacer, and an optional
+// space parameter, and returns a JSON text. The replacer can be a function
+// that can replace values, or an array of strings that will select the keys.
+// A default replacer method can be provided. Use of the space parameter can
+// produce text that is more easily readable.
+
+var i;
+gap = '';
+indent = '';
+if (space) {
+
+// If the space parameter is a number, make an indent string containing that
+// many spaces.
+
+if (typeof space === 'number') {
+for (i = 0; i < space; i += 1) {
+indent += ' ';
+}
+
+// If the space parameter is a string, it will be used as the indent string.
+
+} else if (typeof space === 'string') {
+indent = space;
+}
+}
+
+// If there is no replacer parameter, use the default replacer.
+
+if (!replacer) {
+rep = function(key, value) {
+if (!Object.hasOwnProperty.call(this, key)) {
+return undefined;
+}
+return value;
+};
+
+// The replacer can be a function or an array. Otherwise, throw an error.
+
+} else if (typeof replacer === 'function' ||
+(typeof replacer === 'object' &&
+typeof replacer.length === 'number')) {
+rep = replacer;
+} else {
+throw new Error('JSON.stringify');
+}
+
+// Make a fake root object containing our value under the key of ''.
+// Return the result of stringifying the value.
+
+return str('', { '': value });
+},
+
+
+parse: function(text, reviver) {
+
+// The parse method takes a text and an optional reviver function, and returns
+// a JavaScript value if the text is a valid JSON text.
+var j;
+
+function walk(holder, key) {
+
+// The walk method is used to recursively walk the resulting structure so
+// that modifications can be made.
+
+var k, v, value = holder[key];
+if (value && typeof value === 'object') {
+for (k in value) {
+if (Object.hasOwnProperty.call(value, k)) {
+v = walk(value, k);
+if (v !== undefined) {
+value[k] = v;
+} else {
+delete value[k];
+}
+}
+}
+}
+return reviver.call(holder, key, value);
+}
+
+
+// Parsing happens in three stages. In the first stage, we run the text against
+// regular expressions that look for non-JSON patterns. We are especially
+// concerned with '()' and 'new' because they can cause invocation, and '='
+// because it can cause mutation. But just to be safe, we want to reject all
+// unexpected forms.
+
+// We split the first stage into 4 regexp operations in order to work around
+// crippling inefficiencies in IE's and Safari's regexp engines. First we
+// replace all backslash pairs with '@' (a non-JSON character). Second, we
+// replace all simple value tokens with ']' characters. Third, we delete all
+// open brackets that follow a colon or comma or that begin the text. Finally,
+// we look to see that the remaining characters are only whitespace or ']' or
+// ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.
+
+if (/^[\],:{}\s]*$/.test(text.replace(/\\["\\\/bfnrtu]/g, '@').
 replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
 replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 
-                    // In the second stage we use the eval function to compile the text into a
-                    // JavaScript structure. The '{' operator is subject to a syntactic ambiguity
-                    // in JavaScript: it can begin a block or an object literal. We wrap the text
-                    // in parens to eliminate the ambiguity.
+// In the second stage we use the eval function to compile the text into a
+// JavaScript structure. The '{' operator is subject to a syntactic ambiguity
+// in JavaScript: it can begin a block or an object literal. We wrap the text
+// in parens to eliminate the ambiguity.
 
 
-                    // *** RAS Update:  Fix up Dates: ISO and MS AJAX format support
-                    //var regEx = /(\"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}.*?\")|(\"\\*\/Date\(.*?\)\\*\/")/g;
-                    var regEx = /(\"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}.*?\")|(\"\\*\/Date\(.*?\)\\*\/")/g;
-                    text = text.replace(regEx, this.regExDate);
-                    // *** End RAS Update
+// *** RAS Update:  Fix up Dates: ISO and MS AJAX format support
+//var regEx = /(\"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}.*?\")|(\"\\*\/Date\(.*?\)\\*\/")/g;
+var regEx = /(\"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}.*?\")|(\"\\*\/Date\(.*?\)\\*\/")/g;
+text = text.replace(regEx, this.regExDate);
+// *** End RAS Update
 
-                    j = eval('(' + text + ')');
+j = eval('(' + text + ')');
 
-                    // In the optional third stage, we recursively walk the new structure, passing
-                    // each name/value pair to a reviver function for possible transformation.
+// In the optional third stage, we recursively walk the new structure, passing
+// each name/value pair to a reviver function for possible transformation.
 
-                    return typeof reviver === 'function' ?
-                        walk({ '': j }, '') : j;
-                }
-
-                // If the text is not JSON parseable, then a  is thrown.
-                throw new SyntaxError('JSON.parse');
-            },
-            // *** RAS Update: RegEx handler for dates ISO and MS AJAX style
-            regExDate: function(str, p1, p2, offset, s) {
-                str = str.substring(1).replace('"', '');
-                var date = str;
-
-                // MS Ajax date: /Date(19834141)/
-                if (/\/Date(.*)\//.test(str)) {
-                    str = str.match(/Date\((.*?)\)/)[1];
-                    date = "new Date(" + parseInt(str, 10) + ")";
-                }
-                else { // ISO Date 2007-12-31T23:59:59Z                                     
-                    var matches = str.split(/[\-,:,T,Z]/);
-                    matches[1] = (parseInt(matches[1], 0) - 1).toString();
-                    date = "new Date(Date.UTC(" + matches.join(",") + "))";
-                }
-                return date;
-            },
-
-            quote: quote
-        };
-    } ();
+return typeof reviver === 'function' ?
+walk({ '': j }, '') : j;
 }
 
+// If the text is not JSON parseable, then a  is thrown.
+throw new SyntaxError('JSON.parse');
+},
+// *** RAS Update: RegEx handler for dates ISO and MS AJAX style
+regExDate: function(str, p1, p2, offset, s) {
+str = str.substring(1).replace('"', '');
+var date = str;
+
+// MS Ajax date: /Date(19834141)/
+if (/\/Date(.*)\//.test(str)) {
+str = str.match(/Date\((.*?)\)/)[1];
+date = "new Date(" + parseInt(str, 10) + ")";
+}
+else { // ISO Date 2007-12-31T23:59:59Z                                     
+var matches = str.split(/[\-,:,T,Z]/);
+matches[1] = (parseInt(matches[1], 0) - 1).toString();
+date = "new Date(Date.UTC(" + matches.join(",") + "))";
+}
+return date;
+},
+
+quote: quote
+};
+} ();
+}
+
+*/

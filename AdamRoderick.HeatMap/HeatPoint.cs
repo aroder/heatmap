@@ -5,6 +5,7 @@ using System.Text;
 
 namespace AdamRoderick.HeatMap
 {
+    [System.Diagnostics.DebuggerDisplay("[{X}, {Y}]")]
     public struct HeatPoint
     {
         public int X;
