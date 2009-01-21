@@ -2,10 +2,10 @@
     Inherits="CenStatsHeatMap.UI.HeatMapUnitTests" %>
 
 <asp:content id="Content1" contentplaceholderid="head" runat="server">
-    <script type="text/javascript" src="/scripts/QUnitTestRunner.js"></script>
-<link rel="stylesheet" href="/scripts/QUnit.css" type="text/css" media="screen" />
-<script type="text/javascript" src="/scripts/HeatMap.js"></script>
-<script type="text/javascript" src="/scripts/HeatMapUnitTests.js"></script>
+    <script type="text/javascript" src="./scripts/QUnitTestRunner.js"></script>
+<link rel="stylesheet" href="./scripts/QUnit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="./scripts/HeatMap.js"></script>
+<script type="text/javascript" src="./scripts/HeatMapUnitTests.js"></script>
     
     <script>
 

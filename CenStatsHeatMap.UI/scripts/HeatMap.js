@@ -1,7 +1,4 @@
-﻿//depends on Google Map API and JQuery library
-// http://ui.jquery.com/latest/ui/ui.core.js
-// http://ui.jquery.com/latest/ui/ui.draggable.js
-
+﻿
 /// the application object, an anonymous class
 var HeatMap = {
     HeatMapPoints: [], // associative array where the key is "<lat>,<lng>", value is HeatMapPoint
@@ -12,10 +9,10 @@ var HeatMap = {
         MaxZoomLevel: 12,
         PointRadius: 25,
         DefaultZoom: 8,
-        DebugMode: true,
+        DebugMode: false,
         Center: new GLatLng(39.5, -105),
         ShowMarkers: false,
-        ShowTileBorder: false,
+        ShowTileBorder: true,
         Keys: {
             ShowTileBorder: "tb"
             //, ShowMarkers: "m"
@@ -29,10 +26,14 @@ var HeatMap = {
     },
     Overlay: function(overlay, zoomLevel) {
         // if zoomLevel not defined, use the current zoom level
-        if (!zoomLevel) zoomLevel = this.GoogleMap().getZoom();
+        if (!zoomLevel) {
+            zoomLevel = this.GoogleMap().getZoom();
+        }
 
         // if the private array is not defined, define it
-        if (!this._overlays) this._overlays = [];
+        if (!this._overlays) {
+            this._overlays = [];
+            }
 
         // if the caller passed in a value, treat this as a setter
         if (overlay) {
@@ -46,6 +47,10 @@ var HeatMap = {
     Projection: function() {
         if (!this._projection) { this._projection = G_NORMAL_MAP.getProjection(); }
         return this._projection;
+    },
+    Geocoder: function() {
+        if (!this._geocoder) { this._geocoder = new GClientGeocoder(); }
+        return this._geocoder;
     },
     /// adds the HeatMapPoint to the HeatMap, and associates the point and its tiles
     AddHeatMapPoint: function(heatMapPoint) {
@@ -78,6 +83,34 @@ var HeatMap = {
         }
         HeatMap.Debug("Heatmap now contains " + hashSize(HeatMap.HeatMapPoints) + " HeatMapPoints.");
     },
+
+    AddressesProcessing: 0,
+    /// address - string representing an address
+    /// addressNotFoundCallbackFunction - a function reference to call if the address is not found, sends back the address as a parameter
+    AddAddress: function(address, addressNotFoundCallbackFunction) {
+        HeatMap.AddressesProcessing++;
+        this.Geocoder().getLatLng(
+            address                     // the address to geocode
+            , function(gLatLng) {       // the callback function
+                HeatMap.AddressesProcessing--;
+                if (gLatLng) {
+                    HeatMap.AddHeatMapPoint(new HeatMapPoint(gLatLng.lat(), gLatLng.lng()));
+                    HeatMap.Debug(String.format('Geocoded address "{0}" to [{1},{2}]', address, gLatLng.lat(), gLatLng.lng()));
+                } else if (addressNotFoundCallbackFunction) {
+                    HeatMap.Debug('Could not find address"' + address + '", calling callback function');
+                    addressNotFoundCallbackFunction(address);
+                } else {
+                    HeatMap.Debug('Could not find address "' + address + '", and no callback defined');
+                }
+            }
+        );
+    },
+    AddAddressArray: function(addressArray, addressNotFoundCallbackFunction) {
+        for (var i = 0; i < addressArray.length; i++) {
+            HeatMap.AddAddress(addressArray[i], addressNotFoundCallbackFunction);
+        }
+    },
+    
     ClearHeatMapPoints: function() {
         this.HeatMapPoints = [];
     },
@@ -98,39 +131,9 @@ var HeatMap = {
         var centerPoint = new GLatLng(avgLat, avgLng);
         return centerPoint;
     },
-
-
     AddTileOverlay: function() {
-        var start = new Date();
-        this.StartAddTileOverlay();
-    },
-    StartAddTileOverlay: function() {
-        // we are only concerned with the current zoom level
         var zoomLevel = this.GoogleMap().getZoom();
-
-        var startTime = new Date();
-
-        /*
-        var asyncher = new Asynchronizer();
-        asyncher.for_in_(
-        this.HeatMapPoints,
-        function($, key) {
-        var tileArray = HeatMap.HeatMapPoints[key].GetAssociatedTiles(zoomLevel);
-        var j = 0;
-        for (var i = 0; i < tileArray.length; i++) {
-        tileArray[i].AssociatedHeatMapPoints().push(HeatMap.HeatMapPoints[key]);
-        j++;
-        }
-        return $.continue_();
-        },
-        function() {
-        HeatMap.FinishAddTileOverlay(startTime);
-        }, { clump: 'dynamic' }
-
-        );
-        */
-
-
+    
         for (var key in this.HeatMapPoints) {
             // the point will tell us what tiles it pertains to (the tile that contains it plus any tiles it overlaps onto)
             var tileArray = this.HeatMapPoints[key].GetAssociatedTiles(zoomLevel);
@@ -139,10 +142,6 @@ var HeatMap = {
                 tileArray[i].AssociatedHeatMapPoints().push(this.HeatMapPoints[key]);
             }
         }
-        this.FinishAddTileOverlay(startTime);
-
-    },
-    FinishAddTileOverlay: function(startTime) {
         var TileLayer = new GTileLayer(null, null, null);
         TileLayer.getTileUrl = function(tile, zoom) {
             var key = String.format("{0},{1},{2}", tile.x, tile.y, zoom);
@@ -152,25 +151,36 @@ var HeatMap = {
             }
             return HeatMap.HeatMapTiles[key].GetTileUrl();
         };
+        
         TileLayer.isPng = function() { return true; };
         TileLayer.getOpacity = function() { return 1.0; };
         var o = new GTileLayerOverlay(TileLayer);
         this.GoogleMap().addOverlay(o);
         this.Overlay(o);
-
-        if (startTime) {
-            var end = new Date();
-            var dur = end.getTime() - startTime.getTime();
-            HeatMap.Debug("Added overlay.  Duration: " + dur);
-        }
-
     }
     /// removes the overlay at the current zoom level
     , RemoveTileOverlay: function() {
-        if (this.Overlay()) this.GoogleMap().removeOverlay(this.Overlay());
+        if (this.Overlay()) {
+            this.GoogleMap().removeOverlay(this.Overlay());
+        }
     }
-    , ApplyHeatMap: function() {
-        if (!this.Overlay()) this.AddTileOverlay();
+    /// completedCallbackFunction - called after the heatmap is applied.
+    , ApplyHeatMap: function(completedCallbackFunction) {
+        if (0 < HeatMap.AddressesProcessing) { // retry in a small amount of time if addresses are still being geocoded
+            setTimeout("HeatMap.ApplyHeatMap(" + completedCallbackFunction + ")", 250);
+            HeatMap.Debug('Delaying ApplyHeatMap - ' + HeatMap.AddressesProcessing + ' addresses still processing');
+        } else {
+            if (!HeatMap.Overlay()) { 
+                HeatMap.AddTileOverlay();
+            }
+            if (completedCallbackFunction) {
+                HeatMap.Debug('HeatMap applied, calling callback function');
+                completedCallbackFunction();
+            } else {
+                HeatMap.Debug('HeatMap applied, no callback defined');
+            }
+            
+        }
     }
     // removes and re adds the tile overlay at the current level
     , RefreshTileOverlay: function() {
@@ -182,14 +192,15 @@ var HeatMap = {
         this._overlays = null;
         this.ApplyHeatMap();
     }
-    , Initialize: function(mapDivId) {
-        this.LoadGoogle(mapDivId);
-        if (this.Settings.DebugMode) {
-            $("body").append("<div id='heatMapDebugDiv'><h3>Debug Log</h3></div>");
-            this._debugDiv = $("#heatMapDebugDiv");
-            this._debugDiv.draggable();
-        }
-        this.Debug('HeatMap initialized');
+    , Initialize: function(divId) {
+            var script = document.createElement
+            this.LoadGoogle(divId);
+            if (this.Settings.DebugMode) {
+                $("body").append("<div id='heatMapDebugDiv'><h3>Debug Log</h3></div>");
+                this._debugDiv = $("#heatMapDebugDiv");
+                //this._debugDiv.draggable();
+            }
+            this.Debug('HeatMap initialized');
     }
     , LoadGoogle: function(mapDivId) {
         if (GBrowserIsCompatible()) {
@@ -204,6 +215,8 @@ var HeatMap = {
             GEvent.addListener(HeatMap.GoogleMap(), "zoomend", function(oldLevel, newLevel) {
                 HeatMap.ApplyHeatMap();
             });
+            $(window).unload(GUnload);
+            
         }
         else {
             alert('Your Internet browser is not compatible with this website.');
@@ -212,7 +225,7 @@ var HeatMap = {
     , Debug: function(msg, link) {
         if (this.Settings.DebugMode && this._debugDiv) {
             var linkText = '';
-            if (link) linkText = String.format("<a href='{0}' target='_blank' class='heatMapDebug-link'>Link ({1} characters)</a>", link, link.length);
+            if (link) { linkText = String.format("<a href='{0}' target='_blank' class='heatMapDebug-link'>Link ({1} characters)</a>", link, link.length); }
             var stamp = new Date();
             var stampText = String.format(
                 "<span class='heatMapDebug-timestamp'>{0}:{1}:{2}.{3}</span>",
@@ -324,21 +337,18 @@ HeatMapTile.prototype.GetTileUrl = function() {
                 data.Append(y);
                 data.Append(',');
             }
-            if (0 < data._buffer.length) data._buffer.pop();
+            if (0 < data._buffer.length) { data._buffer.pop(); }
             ////var endTime2 = new Date();
             ////var duration2 = endTime2.getTime() - startTime2.getTime();
             ////HeatMap.Debug("    Created data query string parameter.  Duration: " + duration2);
             
             this._tileUrl = String.format(
-                "http://localhost:1723/images/HeatMapGenerator.ashx?data={0}"
-                , data.ToString()
+                "http://localhost/heatmap/images/HeatMapGenerator.ashx?data={0}", 
+                data.ToString()
             );
             if (HeatMap.Settings.ShowTileBorder) {
                 this._tileUrl += String.format("&{0}={1}", HeatMap.Settings.Keys.ShowTileBorder, HeatMap.Settings.ShowTileBorder);
             }
-            ////var endTime = new Date();
-            ////var duration = endTime.getTime() - startTime.getTime();
-            ////if (0 < duration) HeatMap.Debug("Completed GetTileUrl.  Duration: " + duration);
         } else {
             this._tileUrl = "";
         }
@@ -475,14 +485,14 @@ String.format = function(text) {
 /// HelloWorld
 function StringBuffer() {
     this._buffer = [];
-}
+};
 StringBuffer.prototype.Append = function(string) {
     this._buffer.push(string);
     return this;
-}
+};
 StringBuffer.prototype.ToString = function() {
     return this._buffer.join('');
-}
+};
 
 
 function hashSize(hash) {

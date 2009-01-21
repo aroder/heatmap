@@ -5,3 +5,10 @@ C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects
 C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\AdamRoderick.HeatMap\obj\Debug\ResolveAssemblyReference.cache
 C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\AdamRoderick.HeatMap\obj\Debug\AdamRoderick.HeatMap.dll
 C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\CenStatsHeatMap\AdamRoderick.HeatMap\obj\Debug\AdamRoderick.HeatMap.pdb
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\heatmap\AdamRoderick.HeatMap\bin\Debug\HeatMapPalette.bmp
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\heatmap\AdamRoderick.HeatMap\bin\Debug\HeatMapPalette2.bmp
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\heatmap\AdamRoderick.HeatMap\bin\Debug\AdamRoderick.HeatMap.dll
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\heatmap\AdamRoderick.HeatMap\bin\Debug\AdamRoderick.HeatMap.pdb
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\heatmap\AdamRoderick.HeatMap\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\heatmap\AdamRoderick.HeatMap\obj\Debug\AdamRoderick.HeatMap.dll
+C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\heatmap\AdamRoderick.HeatMap\obj\Debug\AdamRoderick.HeatMap.pdb

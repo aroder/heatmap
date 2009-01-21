@@ -1,20 +1,25 @@
 ﻿// Modules:
+// GeocodingModule
 // HeatMapModule
 // GetCenterModule
 // HeatMapPointsModule
 // HeatMapTileModule
 // HeatMapPointModule
 
+function GeocodingModule() {
+    module("GeocodingModule");
+    test("GeocodeTest1", function() {
+        HeatMap.Geocoder().getLatLng(
+            "Englewood, CO"
+            , function(gLatLng) {
+                //alert(gLatLng.lat() + ',' + gLatLng.lng());
+            }
+        );
+        
+    });
+}
 function HeatMapModule() {
     module("HeatMapModule");
-    //    test("GetQueryStringParm", function() {
-    //        var expectedTestValue = "working";
-    //        var expectedTest2Value = "stillWorking";
-    //        var queryString = "http://localhost/index.html?test=working&test2=stillWorking";
-    //        equals(HeatMap.GetQueryStringParm("test", queryString), expectedTestValue);
-    //        equals(HeatMap.GetQueryStringParm("test2", queryString), expectedTest2Value);
-    //        equals(HeatMap.GetQueryStringParm("test", window.location.href), "");
-    //    });
     test("ClearHeatMapPoints", function() {
         var p = new HeatMapPoint(30, 30);
         HeatMap.AddHeatMapPoint(p);
@@ -351,6 +356,7 @@ function SampleTests() {
 
 
 function RunTests() {
+    GeocodingModule();
     HeatMapModule();
     HeatMapPointModule();
     HeatMapTileModule();
